@@ -136,6 +136,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
+  metrics_sanity_check();
   while (true) {
     enum {
 	  M_HYPOTHESES_COUNT = 256,

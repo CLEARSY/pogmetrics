@@ -67,6 +67,8 @@ typedef struct metrics_t {
 
 extern void metrics_header();
 extern void metrics_initialize(metrics_t&m);
+extern void metrics_sanity_check(void);
+
 extern metrics_t& operator+=(metrics_t &lhs, const metrics_t& rhs);
 extern std::ostream &operator<<(std::ostream &os, const metrics_t &rhs);
   

@@ -100,14 +100,14 @@ const array v_operators_name{
     string(";"), string("<+"), string("<->"), string("<-"), string("<<|"),
     string("<|"), string(">+>"), string(">->"), string(">+>>"), string(">->>"),
     string("><"), string("||"), string("\\/"), string("\\|/"), string("^"),
-    string("mod"), string("|->"), string("|>"), string("|>>"), string("["),
+    string("mod"), string("|->"), string("|>"), string("|>>"), string("[image"),
     string("("), string("<'"), string("prj1"), string("prj2"),
     string("iterate"), string("const"), string("rank"), string("father"),
     string("subtree"), string("arity"),
     // ternary_exp_op
     string("son"), string("bin"),
     // nary_exp_op
-    string("["), string("{"),
+    string("[sequence"), string("{"),
     // quantified_exp_op
     string("%"), string("SIGMA"), string("iSIGMA"), string("rSIGMA"),
     string("PI"), string("iPI"), string("rPI"), string("INTER"),
@@ -115,15 +115,15 @@ const array v_operators_name{
     string("min"), string("imin"), string("rmin"), string("card"),
     string("dom"), string("ran"), string("POW"), string("POW1"), string("FIN"),
     string("FIN1"), string("union"), string("inter"), string("seq"),
-    string("seq1"), string("iseq"), string("iseq1"), string("-"), string("-i"),
-    string("-r"), string("~"), string("size"), string("perm"), string("first"),
+    string("seq1"), string("iseq"), string("iseq1"),
+    string("~"), string("size"), string("perm"), string("first"),
     string("last"), string("id"), string("closure"), string("closure1"),
     string("tail"), string("front"), string("rev"), string("conc"),
     string("succ"), string("pred"), string("rel"), string("fnc"),
     string("real"), string("floor"), string("ceiling"), string("tree"),
     string("btree"), string("top"), string("sons"), string("prefix"),
     string("postfix"), string("sizet"), string("mirror"), string("left"),
-    string("right"), string("infix"), string("bin"), string("Quantified_Set"),
+    string("right"), string("infix"), string("Quantified_Set"),
     string("Boolean_Literal"), string("Integer_Literal"),
     string("Real_Literal"), string("EmptySet"), string("EmptySeq"),
     string("Boolean_Exp"), string("Set"),
@@ -134,6 +134,16 @@ const array v_operators_name{
   There are C_number_operators different operators.
 */
 const auto C_number_operators = v_operators_name.size();
+
+void metrics_sanity_check(void) {
+  for (auto i = 0u; i < C_number_operators-1; ++i) {
+    for(auto j = i+1; j < C_number_operators; ++j) {
+      if(v_operators_name[i].compare(v_operators_name[j]) == 0) {
+	std::cout << "Entry " << j << "(" << v_operators_name[j] << ") is a duplicate." << std::endl;
+      }
+    }
+  }
+}
 
 void opco_metrics_formula(opco_metrics_t &metrics, xml_node n) {
   string op;
@@ -177,6 +187,17 @@ void opco_metrics_formula(opco_metrics_t &metrics, xml_node n) {
     return;
   } else {
     op = string("UNIDENTIFIED");
+  }
+  // handle special case "[", that denotes both
+  //   relational image (in a Binary_Expr)
+  //   sequence literal (in a Nary_Expr)
+  if(op.compare(string("[")) == 0) {
+    if(strcmp("Binary_Exp", n.name()) == 0) {
+      op.append(string("image"));
+    }
+    else if (strcmp("Nary_Exp", n.name()) == 0) {
+      op.append(string("sequence"));
+    }
   }
   // increment counter
   const auto ptr {metrics.counters.find(op)};
