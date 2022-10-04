@@ -1,4 +1,4 @@
-# pog-classifiers
+# pogmetrics
 
 Automate generation of classification data for POG files.
 
