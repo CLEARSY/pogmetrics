@@ -31,6 +31,7 @@
 #ifndef __BOUNDS_H
 #define __BOUNDS_H
 
+#include<cstdint>
 #include<iostream>
 #include<map>
 #include<string>

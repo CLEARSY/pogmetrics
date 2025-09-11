@@ -46,7 +46,7 @@ bool symbol_set_intersects(const symbol_set_t& s1, const symbol_set_t& s2) {
 
 
 symbol_set_t& operator+=(symbol_set_t& lhs, const symbol_set_t& rhs) {
-  for (const auto s: rhs) {
+  for (const auto &s: rhs) {
     if (!contains_symbol(lhs, s)) {
       lhs.push_back(s);
     }
